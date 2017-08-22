@@ -4,15 +4,19 @@ prophages from nucleid acid sequences (including metagenomes).
 It is based on phage genes HMMs and a smoothing window algorithm.
 
 ## Requirements
-* **Python.** Python 2.7, Python 3+ versions are supported. 
+* **Python**: Python 2.7, Python 3+ versions are supported. 
 `pip` utility is also required (`sudo apt-get install python-pip` on Ubuntu).
 
 
-* **MetaGeneMark.** Download it from 
+* **MetaGeneMark**: Download it from 
 [http://topaz.gatech.edu/Genemark/license_download.cgi](http://topaz.gatech.edu/Genemark/license_download.cgi) 
 and follow the instructions.
 
-* **HMMER** Download it from http://hmmer.org/
+* **HMMER**: Download it from http://hmmer.org/
+
+* **locate**: In order to install Phigaro, you need `locate` . 
+It is present in the latest Ubuntu distributions, 
+but in case you don't have it, install it with `sudo apt-get install locate` 
 
 ## Installation
 
@@ -25,7 +29,7 @@ If you have other pip versions installed, use `pip2` or `pip3` instead of `pip`
 ### Simplified, via `phigaro-setup` tool
 In order to simplify setup process, you can run `phigaro-setup` tool.
 It will locate all needed software and download data.
-Also note that in order to install Phigaro, you need `locate` . It is present in the latest Ubuntu distributions, but in case you don't have it, install it with `sudo apt-get install locate` 
+
 Example:
 ```bash
 $ phigaro-setup
@@ -116,9 +120,16 @@ Running time depends on the size of your input data and the number of CPUs used.
 The mean running time for a fasta file with Escherichia coli O157:H7 (str. Sakai) genome is 207 seconds (with 1 thread used).
 
 ## Modus operandi
-ORFs and corresponging proteins are predicted from the input .fasta file using MetaGeneMark. Phage genes are predicted with pVOG Hidden Markov Models that can be downloaded stand-alone from http://dmk-brain.ecn.uiowa.edu/pVOGs/. Each contig is represented as a sequence of phage and non-phage genes. A smoothing window algorithm determines regions with high density of phage genes and prophage boundaries.
+ORFs and corresponging proteins are predicted from the input .fasta file using MetaGeneMark. 
+Phage genes are predicted with pVOG Hidden Markov Models 
+that can be downloaded stand-alone from http://dmk-brain.ecn.uiowa.edu/pVOGs/. 
+Each contig is represented as a sequence of phage and non-phage genes. 
+A smoothing window algorithm determines regions with high density of phage genes 
+and prophage boundaries.
 
-In case of any questions regarding installing and running Phigaro please adress estarikova@rcpcm.org
+In case of any questions regarding installing and running Phigaro 
+please address [estarikova@rcpcm.org](mailto:estarikova@rcpcm.org)
+or leave feedback on [Github issues page](https://github.com/lpenguin/phigaro/issues).
 
 ----
 (C) E.Starikova, N.Pryanichnikov, 2017
