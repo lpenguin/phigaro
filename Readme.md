@@ -1,4 +1,4 @@
-# Phigaro: CLI tool for predictions phages
+# Phigaro: CLI tool for phage prediction
 Phigaro is a scalable command-line tool for predictions phages and
 prophages from nucleid acid sequences (including metagenomes).
 It is based on phage genes HMMs and a smoothing window algorithm.
@@ -14,7 +14,7 @@ and follow the instructions.
 
 * **HMMER**: Download it from http://hmmer.org/
 
-* **locate**: In order to install Phigaro, you need `locate` . 
+* **locate**: In order to install Phigaro, you need `locate`. 
 It is present in the latest Ubuntu distributions, 
 but in case you don't have it, install it with `sudo apt-get install locate` 
 
