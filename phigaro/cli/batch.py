@@ -18,7 +18,7 @@ from phigaro.scheduling.task.hmmer import HmmerTask
 from phigaro.scheduling.task.dummy import DummyTask
 from phigaro.scheduling.task.parse_hmmer import ParseHmmerTask
 from phigaro.scheduling.task.run_phigaro import RunPhigaroTask
-
+from phigaro._version import __version__
 
 def parse_substitute_output(subs):
     subs = subs or []
@@ -48,6 +48,9 @@ def main():
         description='Phigaro is a scalable command-line tool for predictions phages and prophages '
                     'from nucleid acid sequences',
     )
+
+    parser.add_argument('-V', '--version', action='version',
+                        version='%(prog)s {version}'.format(version=__version__))
     parser.add_argument('-f', '--fasta-file', help='Assembly scaffolds/contigs or full genomes, required',
                         required=True)
     parser.add_argument('-c', '--config', default=default_config_path, help='config file, not required')
