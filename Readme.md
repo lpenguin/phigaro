@@ -1,5 +1,5 @@
 # Phigaro v. 0.1.1a
-Phigaro is a scalable command-line tool for predictions phages and prophages from nucleid acid sequences (including metagenomes) and is based on phage genes HMMs and a smoothing window algorithm.
+Phigaro is a scalable command-line tool for predictions phages and prophages from nucleid acid sequences (including metagenomes) and is based on phage genes HMMs (pVOG) and a smoothing window algorithm.
 
 ## Requirements
 Note that in order to run Phigaro, you need to have MetaGeneMark and HMMER installed.
@@ -29,5 +29,5 @@ optional arguments:
 ```
 
 Running time depends on the size of your input data and the number of CPUs used.
-The mean running time for a fasta file of ???MB is ... minutes.
-(c) N.Pryanichnikov, E.Starikova, 2017
+The mean running time for a fasta file with Escherichia coli O157:H7 (str. Sakai) genome is 207 seconds (with 1 thread used).
+(c) E.Starikova, N.Pryanichnikov, 2017
