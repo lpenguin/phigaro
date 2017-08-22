@@ -44,15 +44,15 @@ def create_task(substitutions, task_class, *args, **kwargs):
 def main():
     default_config_path = join(os.getenv('HOME'), '.phigaro', 'config.yml')
     parser = argparse.ArgumentParser(
+        prog='phigaro',
         description='Phigaro is a scalable command-line tool for predictions phages and prophages '
-                    'from nucleid acid sequences (including metagenomes) and '
-                    'is based on phage genes HMMs and a smoothing window algorithm.',
+                    'from nucleid acid sequences',
     )
-    parser.add_argument('-f', '--fasta-file', help='Assembly scaffolds/contigs or full genomes. Required',
+    parser.add_argument('-f', '--fasta-file', help='Assembly scaffolds/contigs or full genomes, required',
                         required=True)
-    parser.add_argument('-c', '--config', default=default_config_path, help='config file')
-    parser.add_argument('-v', '--verbose', action='store_true', help='print debug information (for developers)')
-    parser.add_argument('-o', '--output')
+    parser.add_argument('-c', '--config', default=default_config_path, help='config file, not required')
+    parser.add_argument('-v', '--verbose', action='store_true', help=argparse.SUPPRESS)
+    parser.add_argument('-o', '--output', help='Output file, leave blank for stdout')
     parser.add_argument('-t', '--threads',
                         type=int,
                         default=multiprocessing.cpu_count(),

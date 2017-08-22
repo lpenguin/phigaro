@@ -76,15 +76,19 @@ or manually download data from [http://download.ripcm.com/phigaro/](http://downl
 ## Usage
 
 ```bash
-$ phigaro -h                                                                                                                                                                          15:04:32
-usage: phigaro [-h] [-f FASTA_FILE] [-c CONFIG] [-v] [-t THREADS]
+$ phigaro -h  
+usage: phigaro [-h] -f FASTA_FILE [-c CONFIG] [-o OUTPUT] [-t THREADS]
+Phigaro is a scalable command-line tool for predictions phages and prophages                                                                                                                                                                        
+from nucleid acid sequences
+
 optional arguments:
   -h, --help            show this help message and exit
   -f FASTA_FILE, --fasta-file FASTA_FILE
-                        Assembly scaffolds\contigs or full genomes
+                        Assembly scaffolds/contigs or full genomes, required
   -c CONFIG, --config CONFIG
                         config file, not required
-  -v, --verbose
+  -o OUTPUT, --output OUTPUT
+                        Output file, not required, default is stdout
   -t THREADS, --threads THREADS
                         num of threads (default is num of CPUs)
 ```

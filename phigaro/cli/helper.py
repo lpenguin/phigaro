@@ -56,7 +56,8 @@ def main():
     phigaro_config = os.path.join(phigaro_dir, 'config.yml')
     pvogs_dir = os.path.join(phigaro_dir, 'pvog')
 
-    parser = argparse.ArgumentParser(description="Phigaro setup helper",
+    parser = argparse.ArgumentParser(prog='phigaro-setup',
+                                     description="Phigaro setup helper",
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     parser.add_argument('-c', '--config', default=phigaro_config, help='config path')
