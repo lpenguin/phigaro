@@ -19,12 +19,13 @@ and follow the instructions.
 ```bash
 $ sudo -H pip install phigaro
 ```
-
+If you have other pip versions installed, use `pip2` or `pip3` instead of `pip`
 ## Configuration
 
 ### Simplified, via `phigaro-setup` tool
 In order to simplify setup process, you can run `phigaro-setup` tool.
 It will locate all needed software and download data.
+Also note that in order to install Phigaro, you need `locate` . It is present in the latest Ubuntu distributions, but in case you don't have it, install it with `sudo apt-get install locate` 
 Example:
 ```bash
 $ phigaro-setup
@@ -112,6 +113,12 @@ scaffold	begin	end
 >Escherichia_coli_O157:H7_str._Sakai	5046510	5082381
 ```
 Running time depends on the size of your input data and the number of CPUs used.
-The mean running time for a fasta file of 10MB is ~5 minutes.
+The mean running time for a fasta file with Escherichia coli O157:H7 (str. Sakai) genome is 207 seconds (with 1 thread used).
+
+## Modus operandi
+ORFs and corresponging proteins are predicted from the input .fasta file using MetaGeneMark. Phage genes are predicted with pVOG Hidden Markov Models that can be downloaded stand-alone from http://dmk-brain.ecn.uiowa.edu/pVOGs/. Each contig is represented as a sequence of phage and non-phage genes. A smoothing window algorithm determines regions with high density of phage genes and prophage boundaries.
+
+In case of any questions regarding installing and running Phigaro please adress estarikova@rcpcm.org
+
 ----
-(C) N.Pryanichnikov, E.Starikova, 2017
+(C) E.Starikova, N.Pryanichnikov, 2017
