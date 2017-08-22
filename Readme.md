@@ -86,11 +86,11 @@ optional arguments:
   -f FASTA_FILE, --fasta-file FASTA_FILE
                         Assembly scaffolds/contigs or full genomes, required
   -c CONFIG, --config CONFIG
-                        config file, not required
+                        Config file, not required
   -o OUTPUT, --output OUTPUT
                         Output file, not required, default is stdout
   -t THREADS, --threads THREADS
-                        num of threads (default is num of CPUs)
+                        Num of threads (default is num of CPUs)
 ```
 
 Running time depends on the size of your input data and the number of CPUs used.

@@ -53,13 +53,13 @@ def main():
                         version='%(prog)s {version}'.format(version=__version__))
     parser.add_argument('-f', '--fasta-file', help='Assembly scaffolds/contigs or full genomes, required',
                         required=True)
-    parser.add_argument('-c', '--config', default=default_config_path, help='config file, not required')
+    parser.add_argument('-c', '--config', default=default_config_path, help='Config file, not required')
     parser.add_argument('-v', '--verbose', action='store_true', help=argparse.SUPPRESS)
-    parser.add_argument('-o', '--output', help='Output file, leave blank for stdout')
+    parser.add_argument('-o', '--output', help='Output file, not required, default is stdout')
     parser.add_argument('-t', '--threads',
                         type=int,
                         default=multiprocessing.cpu_count(),
-                        help='num of threads ('
+                        help='Num of threads ('
                              'default is num of CPUs={})'.format(multiprocessing.cpu_count()))
 
     parser.add_argument('--no-cleanup', action='store_true', help=argparse.SUPPRESS)
