@@ -65,6 +65,8 @@ class RunPhigaroTask(AbstractTask):
 
             with open(self.hmmer_task.output()) as f:
                 reader = csv.reader(f, delimiter='\t')
+
+                writer.writerow(('scaffold', 'begin', 'end'))
                 for scaffold, npn_str in reader:
                     genes_coords = scaffold_genes_coords[scaffold]
 
