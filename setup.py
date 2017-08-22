@@ -2,8 +2,8 @@ from setuptools import setup
 
 setup(name='phigaro',
       description='Phigaro is a scalable command-line tool for predictions phages and prophages '
-                  'from nucleid acid sequences (including metagenomes) and '
-                  'is based on phage genes HMMs and a smoothing window algorithm.',
+                  'from nucleid acid sequences (including metagenomes).'
+                  'It is based on phage genes HMMs and a smoothing window algorithm.',
       version=open("phigaro/_version.py").readlines()[-1].split()[-1].strip("\"'"),
       author='E.Starikova, N.Pryanichnikov',
       author_email='hed.robin@gmail.com',
