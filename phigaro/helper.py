@@ -42,7 +42,7 @@ def _choose_option(message, options):
 
         for i, option in enumerate(options):
             print("[{}] {}".format(i + 1, option))
-        option_num = str(input('Choose your option (Enter for {}): '.format(options[0])))
+        option_num = input('Choose your option (Enter for {}): '.format(options[0]))
         if option_num == '':
             option_num = '1'
         if re.match(r'^\d+$', option_num):
