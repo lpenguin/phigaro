@@ -1,5 +1,7 @@
 from builtins import super
 
+import os
+
 from .base import AbstractTask
 import sh
 
@@ -11,6 +13,7 @@ class GeneMarkTask(AbstractTask):
         super().__init__()
 
         self.input = input
+        self._lst_file = input + '.lst'
         self.gene_mark = (
             sh.Command(self.config['genemark']['bin'])
             .bake(
@@ -24,3 +27,6 @@ class GeneMarkTask(AbstractTask):
 
     def run(self):
         self.gene_mark(self.input)
+
+    def clean(self):
+        os.unlink(self._lst_file)
