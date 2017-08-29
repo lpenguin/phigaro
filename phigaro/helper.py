@@ -26,6 +26,12 @@ class MetaGeneMarkKeyNotFound(HelperException):
               "You can download the \"key\" file only. "
 
 
+class MetaGeneMarkModNotFound(HelperException):
+    message = "Please ensure your MetaGeneMark mod file is in the same location as MetaGeneMark: " + \
+              "http://topaz.gatech.edu/GeneMark/license_download.cgi . " + \
+              "You can download the \"mod\" file only. "
+
+
 class HMMERNotFound(HelperException):
     message = "No HMMER found. Please download HMMER package from here: http://hmmer.org/download.html "
 
@@ -116,9 +122,10 @@ class SetupHelper(object):
         )
 
     def _find_mgm_mod_file(self, mgm_dir):
-        # TODO: handle no or multiple .mod files in mgm_dir
         message = 'Please select appropriate MetaGeneMark .mod file location'
         res = glob(join(mgm_dir, '*.mod'))
+        if not res:
+            raise MetaGeneMarkModNotFound()
         return _choose_option(message=message,
                               options=res)
 
