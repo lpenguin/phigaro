@@ -8,6 +8,8 @@ import sh
 from future.backports.urllib.parse import urljoin
 import re
 
+from phigaro import const
+
 
 class HelperException(Exception):
     message = None
@@ -168,7 +170,7 @@ class SetupHelper(object):
                                                raise_if_not_found=HMMERNotFound)
         return {
             'bin': hmmsearch_location,
-            'e_value_threshold': 1.0e-5,
+            'e_value_threshold': const.DEFAULT_MAX_EVALUE,
         }
 
     def setup(self):
