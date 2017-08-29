@@ -2,7 +2,7 @@ from builtins import super
 import csv
 from itertools import groupby
 
-from phigaro.data import convert_npn
+from phigaro.data import convert_npn, read_genemark_output
 from phigaro.finder.v2 import V2Finder
 from .base import AbstractTask
 from .parse_hmmer import ParseHmmerTask
@@ -32,33 +32,8 @@ class RunPhigaroTask(AbstractTask):
     def output(self):
         return self.file('{}.tsv'.format(self.sample))
 
-    def read_gene_coords(self):
-        def extract_coords(gene_str):
-            tokens = gene_str.split('|')
-            return int(tokens[-2]), int(tokens[-1])
-
-        with open(self.gene_mark_task.output()) as f:
-            genes_scaffolds = (
-                line.strip().split('\t')
-                for line in f
-                if line.startswith('>')
-            )
-
-            genes_scaffolds = (
-                (scaffold, extract_coords(gene_str))
-                for gene_str, scaffold in genes_scaffolds
-            )
-
-            return {
-                scaffold: [
-                    coords
-                    for _, coords in group
-                ]
-                for scaffold, group in groupby(genes_scaffolds, key=lambda x: x[0])
-            }
-
     def run(self):
-        scaffold_genes_coords = self.read_gene_coords()
+        scaffold_genes_coords = read_genemark_output(self.gene_mark_task.output())
 
         with open(self.output(), 'w') as of:
             writer = csv.writer(of, delimiter='\t')
