@@ -10,6 +10,8 @@ from .hmmer import HmmerTask
 
 logger = logging.getLogger(__name__)
 
+INFINITY = float('inf')
+
 
 class ParseHmmerTask(AbstractTask):
     task_name = 'parse_hmmer'
@@ -42,35 +44,39 @@ class ParseHmmerTask(AbstractTask):
         max_evalue = self.config['hmmer']['e_value_threshold']
 
         with open(self.hmmer_task.output()) as f:
-            it = (
+            lines_it = (
                 self.parse_line(line.strip())
                 for line in f
                 if not line.startswith('#') and line.strip()
             )
 
             hmm_res = {}
-            for scaffold, name, evalue in it:
+            for scaffold, gene_name, evalue in lines_it:
                 if scaffold not in hmm_res:
                     hmm_res[scaffold] = {}
-                hmm_res[scaffold][name] = 1 if evalue <= max_evalue else 0
+                # Take minimum of all evalues for current gene_name
+                if gene_name in hmm_res[scaffold]:
+                    hmm_res[scaffold][gene_name] = min(evalue, hmm_res[scaffold][gene_name])
+                else:
+                    hmm_res[scaffold][gene_name] = evalue
 
         with open(self.genemark_task.output()) as f:
             with open(self.output(), 'w') as of:
                 writer = csv.writer(of, delimiter='\t')
-                it = (
+                lines_it = (
                     line.strip().split('\t')
                     for line in f
                     if line.startswith('>')
                 )
 
-                for scaffold, group in groupby(it, key=lambda t: t[1]):
+                for scaffold, group in groupby(lines_it, key=lambda t: t[1]):
                     if scaffold not in hmm_res:
                         continue
                     scaffold_res = hmm_res[scaffold]
 
                     is_phage_it = (
-                        scaffold_res.get(name[1:], 0)
-                        for name, _ in group
+                        scaffold_res.get(gene_name[1:], INFINITY) <= max_evalue
+                        for gene_name, _ in group
                     )
 
                     is_phage_it = (
