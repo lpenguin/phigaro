@@ -11,14 +11,15 @@ from os.path import join, exists
 import yaml
 
 from phigaro.context import Context
-from phigaro.scheduling.path import sample_name
-from phigaro.scheduling.runner import run_tasks_chain
-from phigaro.scheduling.task.gene_mark import GeneMarkTask
-from phigaro.scheduling.task.hmmer import HmmerTask
-from phigaro.scheduling.task.dummy import DummyTask
-from phigaro.scheduling.task.parse_hmmer import ParseHmmerTask
-from phigaro.scheduling.task.run_phigaro import RunPhigaroTask
+from phigaro.batch.runner import run_tasks_chain
+from phigaro.batch.task.path import sample_name
+from phigaro.batch.task.gene_mark import GeneMarkTask
+from phigaro.batch.task.hmmer import HmmerTask
+from phigaro.batch.task.dummy import DummyTask
+from phigaro.batch.task.parse_hmmer import ParseHmmerTask
+from phigaro.batch.task.run_phigaro import RunPhigaroTask
 from phigaro._version import __version__
+
 
 def parse_substitute_output(subs):
     subs = subs or []

@@ -5,7 +5,7 @@ from os.path import exists
 import six
 
 from phigaro.context import Context
-from phigaro.scheduling.path import directory, file
+from phigaro.batch.task.path import directory, file
 
 
 @six.add_metaclass(abc.ABCMeta)
