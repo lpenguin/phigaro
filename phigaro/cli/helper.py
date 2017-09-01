@@ -16,7 +16,7 @@ def create_config(no_update_db, config_path, pvogs_dir):
         os.makedirs(config_dir)
 
     if exists(config_path):
-        print('Phigaro already configured')
+        print('Phigaro already configured at {}'.format(config_path))
         return
 
     helper = SetupHelper(no_update_db)
