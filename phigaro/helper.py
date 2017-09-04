@@ -191,7 +191,7 @@ class SetupHelper(object):
             },
             'hmmer': {
                 'bin': hmmer_params['bin'],
-                'e_value_threshold': 1.0e-5,
+                'e_value_threshold': hmmer_params['e_value_threshold'],
             },
             'phigaro': {
                 'window_len': 34,
