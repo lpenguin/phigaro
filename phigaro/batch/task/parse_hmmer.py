@@ -2,9 +2,8 @@ import csv
 import logging
 import re
 from builtins import super
-from itertools import groupby
 
-from phigaro.data import read_hmmer_output, read_genemark_output
+from phigaro.data import read_hmmer_output, read_genemark_output, hmm_to_evalues
 from phigaro.misc.ranges import first
 from .base import AbstractTask
 from .gene_mark import GeneMarkTask
@@ -48,22 +47,15 @@ class ParseHmmerTask(AbstractTask):
         hmm_res = read_hmmer_output(self.hmmer_task.output())
         mgm_res = read_genemark_output(self.genemark_task.output())
 
+        hmm_evalues = hmm_to_evalues(mgm_res, hmm_res)
+
         with open(self.output(), 'w') as of:
             writer = csv.writer(of, delimiter='\t')
 
-            for scaffold, coords_names in sorted(mgm_res.items(), key=first):
-                if scaffold not in hmm_res:
-                    continue
-                scaffold_res = hmm_res[scaffold]
-
-                is_phage_it = (
-                    scaffold_res.get(gene_name[1:], INFINITY) <= max_evalue
-                    for begin, end, gene_name in coords_names
+            for scaffold, evalues in hmm_evalues:
+                npn_it = (
+                    'P' if e < max_evalue else 'P'
+                    for e in evalues
                 )
-
-                is_phage_it = (
-                    'P' if is_phage else 'N'
-                    for is_phage in is_phage_it
-                )
-                writer.writerow((scaffold, ''.join(is_phage_it)))
+                writer.writerow((scaffold, ''.join(npn_it)))
 

@@ -3,6 +3,7 @@ import re
 from itertools import groupby
 
 from phigaro.misc.ranges import first, second
+INFINITY = float('inf')
 
 
 def read_npn(filename, sep=None, as_dict=True):
@@ -93,3 +94,21 @@ def read_genemark_output(file_name):
             scaffold: [extract_coords_and_name(gene_str) for gene_str, _ in scaffold_gene_strs]
             for scaffold, scaffold_gene_strs in groupby(genes_scaffolds, key=second)
         }
+
+
+def hmm_to_evalues(mgm_res, hmm_res):
+    """
+    :type mgm_res: dict[str, list[tuple[int, int, str]]]
+    :type hmm_res: dict[str: list[float]]
+    """
+    for scaffold, coords_names in sorted(mgm_res.items(), key=first):
+        if scaffold not in hmm_res:
+            continue
+        hmm_scaffold_res = hmm_res[scaffold]
+
+        evalues_it = [
+            hmm_scaffold_res.get(gene_name[1:], INFINITY)
+            for begin, end, gene_name in coords_names
+        ]
+
+        yield (scaffold, evalues_it)
