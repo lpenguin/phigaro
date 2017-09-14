@@ -6,7 +6,11 @@ import errno
 
 def sample_name(sample_path):
     sample_path = basename(sample_path)
-    return re.match(r'(\w+)', sample_path).group(1)
+    tokens = sample_path.split('.')
+    if len(tokens) == 1:
+        return sample_path
+    else:
+        return '.'.join(tokens[:-1])
 
 
 def path(*items):
