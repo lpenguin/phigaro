@@ -59,11 +59,11 @@ hmmer:
   bin: /home/user/software/hmmer-3.1b2-linux-intel-x86_64/binaries/hmmsearch
   # HMMER models, usually: ~/.phigaro/pvog/allpvoghmms
   pvog_path: /home/user/.phigaro/pvog/allpvoghmms
-  e_value_threshold: 1.0e-05  # Do not change this
+  e_value_threshold: 0.00445  # Do not change this
 phigaro:
-  threshold_max: 7.571429  # Do not change this
-  threshold_min: 5.341108  # Do not change this
-  window_len: 34  # Do not change this
+  threshold_max: 8.827586  # Do not change this
+  threshold_min: 7.058859  # Do not change this
+  window_len: 32  # Do not change this
 ```
 
 Run `phigaro-setup` to download models data: 

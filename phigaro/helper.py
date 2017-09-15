@@ -177,7 +177,6 @@ class SetupHelper(object):
                                                raise_if_not_found=HMMERNotFound)
         return {
             'bin': hmmsearch_location,
-            'e_value_threshold': const.DEFAULT_MAX_EVALUE,
         }
 
     def setup(self):
@@ -191,11 +190,11 @@ class SetupHelper(object):
             },
             'hmmer': {
                 'bin': hmmer_params['bin'],
-                'e_value_threshold': 1.0e-5,
+                'e_value_threshold': const.DEFAULT_MAX_EVALUE,
             },
             'phigaro': {
-                'window_len': 34,
-                'threshold_min': 5.341108,
-                'threshold_max': 7.571429,
+                'window_len': const.DEFAULT_WINDOW_SIZE,
+                'threshold_min': const.DEFAULT_THRESHOLD_MIN,
+                'threshold_max': const.DEFAULT_THRESHOLD_MAX,
             }
         }
