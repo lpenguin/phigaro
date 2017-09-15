@@ -50,7 +50,7 @@ def _choose_option(message, options):
 
         for i, option in enumerate(options):
             print("[{}] {}".format(i + 1, option))
-        option_num = str(input('Choose your option (Enter for {}): '.format(options[0])))
+        option_num = input('Choose your option (Enter for {}): '.format(options[0]))
         if option_num == '':
             option_num = '1'
         if re.match(r'^\d+$', option_num):
@@ -67,6 +67,18 @@ def download_pvogs(base_url, out_dir):
     def download_file(filename):
         url = urljoin(base_url, filename)
         out = join(out_dir, filename)
+        if exists(out):
+            while True:
+                overwrite = input('File {} already exists, overwrite it (Y/N)?'.format(out))
+                if overwrite.upper() in {'Y', 'YES'}:
+                    overwrite = 'Y'
+                    break
+                elif overwrite.upper() in {'N', 'NO'}:
+                    overwrite = 'N'
+                    break
+            if overwrite == 'N':
+                return
+
         print('Downloading {url} to {out}'.format(
             url=url,
             out=out,
@@ -177,7 +189,6 @@ class SetupHelper(object):
                                                raise_if_not_found=HMMERNotFound)
         return {
             'bin': hmmsearch_location,
-            'e_value_threshold': const.DEFAULT_MAX_EVALUE,
         }
 
     def setup(self):
@@ -191,11 +202,11 @@ class SetupHelper(object):
             },
             'hmmer': {
                 'bin': hmmer_params['bin'],
-                'e_value_threshold': 1.0e-5,
+                'e_value_threshold': const.DEFAULT_MAX_EVALUE,
             },
             'phigaro': {
-                'window_len': 34,
-                'threshold_min': 5.341108,
-                'threshold_max': 7.571429,
+                'window_len': const.DEFAULT_WINDOW_SIZE,
+                'threshold_min': const.DEFAULT_THRESHOLD_MIN,
+                'threshold_max': const.DEFAULT_THRESHOLD_MAX,
             }
         }
