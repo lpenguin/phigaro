@@ -23,7 +23,7 @@ class HmmerTask(AbstractTask):
         )
 
     def output(self):
-        return self.file('{}.npn'.format(self.sample))
+        return self.file('{}.hmmer_out'.format(self.sample))
 
     def run(self):
         self.hmmer('--cpu', self.context.threads,
