@@ -16,7 +16,6 @@ from phigaro.batch.task.path import sample_name
 from phigaro.batch.task.gene_mark import GeneMarkTask
 from phigaro.batch.task.hmmer import HmmerTask
 from phigaro.batch.task.dummy import DummyTask
-from phigaro.batch.task.parse_hmmer import ParseHmmerTask
 from phigaro.batch.task.run_phigaro import RunPhigaroTask
 from phigaro._version import __version__
 
