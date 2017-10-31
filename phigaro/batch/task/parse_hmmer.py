@@ -3,8 +3,7 @@ import logging
 import re
 from builtins import super
 
-from phigaro.data import read_hmmer_output, read_genemark_output, hmm_to_evalues
-from phigaro.misc.ranges import first
+from phigaro.data import read_hmmer_output, read_genemark_output
 from .base import AbstractTask
 from .gene_mark import GeneMarkTask
 from .hmmer import HmmerTask

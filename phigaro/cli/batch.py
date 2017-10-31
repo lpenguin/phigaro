@@ -57,6 +57,7 @@ def main():
     parser.add_argument('-c', '--config', default=default_config_path, help='Config file, not required')
     parser.add_argument('-v', '--verbose', action='store_true', help=argparse.SUPPRESS)
     parser.add_argument('-o', '--output', help='Output file, not required, default is stdout')
+    parser.add_argument('-p', '--print-vogs', help='Print phage vogs for each region', action='store_true')
     parser.add_argument('-t', '--threads',
                         type=int,
                         default=multiprocessing.cpu_count(),
@@ -82,6 +83,8 @@ def main():
         logger.info('Using config file: {}'.format(args.config))
         config = yaml.load(f)
 
+    config['phigaro']['print_vogs'] = args.print_vogs
+
     filename = args.fasta_file
     sample = '{}-{}'.format(
         sample_name(filename),
@@ -102,20 +105,15 @@ def main():
     hmmer_task = create_task(substitutions,
                              HmmerTask,
                              gene_mark_task=gene_mark_task)
-    parse_hmmer_task = create_task(substitutions,
-                                   ParseHmmerTask,
-                                   gene_mark_task=gene_mark_task,
-                                   hmmer_task=hmmer_task,
-                                   )
+
     run_phigaro_task = create_task(substitutions,
                                    RunPhigaroTask,
                                    gene_mark_task=gene_mark_task,
-                                   parse_hmmer_task=parse_hmmer_task)
+                                   hmmer_task=hmmer_task)
 
     tasks = [
         gene_mark_task,
         hmmer_task,
-        parse_hmmer_task,
         run_phigaro_task
     ]
     task_output_file = run_tasks_chain(tasks)

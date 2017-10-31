@@ -1,8 +1,10 @@
 import csv
 import re
+from collections import OrderedDict, defaultdict, Iterable
 from itertools import groupby
 
-from phigaro.misc.ranges import first, second
+from phigaro.misc.ranges import second
+
 INFINITY = float('inf')
 
 
@@ -36,20 +38,111 @@ def convert_npn(phage, ph_sym):
     ]
 
 
-def read_hmmer_output(file_path):
-    """
-    :type file_path: str
-    :rtype: dict[str: list[float]]
+def hmmer_res_to_npn(scaffold, hmmer_result, max_evalue):
+    # type: (Scaffold, HmmerResult, float)->list[int]
+    ordered_records_it = (
+        HmmerResult.min_record(hmmer_result.get_records(scaffold.name, gene.name))
+        for gene in scaffold
+    )
 
-    :returns Dictionary: scaffold-> list of evalues
-    """
+    return [
+        0
+        if not record or record.evalue > max_evalue
+        else 1
+        for record in ordered_records_it
+    ]
+
+
+class Gene(object):
+    def __init__(self, name, begin, end, scaffold=None):
+        # type: (str, int, int, Scaffold|None)->Gene
+        self.name = name
+        self.begin = begin
+        self.end = end
+        self.scaffold = scaffold
+
+
+class Scaffold(object):
+    def __init__(self, name, genes):
+        # type: (str, list[Gene])->Scaffold
+        self.name = name
+        self._genes_map = OrderedDict()
+
+        for gene in sorted(genes, key=lambda g: g.begin):
+            gene.scaffold = self
+            self._genes_map[gene.name] = gene
+
+    def __iter__(self):
+        # type: ()->Iterable[Gene]
+        return iter(self._genes_map.values())
+
+    def get_gene(self, gene_name):
+        # type: (str)->Gene
+        return self._genes_map[gene_name]
+
+
+class ScaffoldSet(object):
+    def __init__(self, scaffolds):
+        # type: (list[Scaffold])->ScaffoldSet
+        self._scaffolds_map = {
+            scaffold.name: scaffold
+            for scaffold in scaffolds
+        }
+
+    def get_scaffold(self, scaffold_name):
+        # type: (str)->Scaffold
+        return self._scaffolds_map[scaffold_name]
+
+    def __iter__(self):
+        return iter(self._scaffolds_map.values())
+
+
+class HmmerRecord(object):
+    def __init__(self, scaffold_name, gene_name, vog_name, evalue):
+        # type: (str, str, str, float)->HmmerRecord
+        self.scaffold_name = scaffold_name
+        self.gene_name = gene_name
+        self.vog_name = vog_name
+        self.evalue = evalue
+
+
+class HmmerResult(object):
+    def __init__(self, hmmer_records):
+        # type: (Iterable[HmmerRecord])->HmmerResult
+        self._scaffolds_map = defaultdict(lambda: defaultdict(list))  # type: dict[str, dict[str, list[HmmerRecord]]]
+        for hmmer_record in hmmer_records:
+            self._add_record(hmmer_record)
+
+    def _add_record(self, hmmer_record):
+        # type: (HmmerRecord)->None
+        scaffold_records = self._scaffolds_map[hmmer_record.scaffold_name]
+        scaffold_records[hmmer_record.gene_name].append(hmmer_record)
+
+    def get_records(self, scaffold_name, gene_name):
+        # type: (str, str)->list[HmmerRecord]
+        return self._scaffolds_map[scaffold_name].get(gene_name, [])
+
+    @staticmethod
+    def min_record(records):
+        # type: (list[HmmerRecord])->HmmerRecord|None
+        if not records:
+            return None
+        return min(records, key=lambda r: r.evalue)
+
+
+def read_hmmer_output(file_path):
+    # type: (str)->HmmerResult
 
     def parse_line(line):
+        # type: (str)->HmmerRecord
         tokens = re.split(r'\s+', line)
-        scaffold = '>' + line.split('>')[1]
-        name = tokens[0]
-        evalue = float(tokens[4])
-        return scaffold, name, evalue
+
+        return HmmerRecord(
+            scaffold_name=line.split('>')[1],
+            gene_name=tokens[0],
+            vog_name=tokens[2],
+            evalue=float(tokens[4])
+        )
 
     with open(file_path) as f:
         lines_it = (
@@ -58,57 +151,45 @@ def read_hmmer_output(file_path):
             if not line.startswith('#') and line.strip()
         )
 
-        hmm_res = {}
-        for scaffold, gene_name, evalue in lines_it:
-            if scaffold not in hmm_res:
-                hmm_res[scaffold] = {}
-            # Take minimum of all evalues for current gene_name
-            if gene_name in hmm_res[scaffold]:
-                hmm_res[scaffold][gene_name] = min(evalue, hmm_res[scaffold][gene_name])
-            else:
-                hmm_res[scaffold][gene_name] = evalue
+        hmm_res = HmmerResult(lines_it)
 
         return hmm_res
 
 
 def read_genemark_output(file_name):
-    """
+    # type: (str)->ScaffoldSet
 
-    :type file_name: str
-    :rtype: dict[str, list[tuple[int, int, str]]]
-
-    :returns Dictionary scaffold -> list of tuples (begin, end, gene_name)
-    """
     def extract_coords_and_name(gene_str):
+        # type: (str)->Gene
+
         tokens = gene_str.split('|')
-        return int(tokens[-2]), int(tokens[-1]), gene_str
+        return Gene(
+            name=gene_str[1:],
+            begin=int(tokens[-2]),
+            end=int(tokens[-1])
+        )
+
+    def parse_gene_records(gene_records):
+        # type: (list[str])->list[Gene]
+        return [
+            extract_coords_and_name(gene_str)
+            for gene_str, _ in gene_records
+        ]
 
     with open(file_name) as f:
-        genes_scaffolds = (
+        genes_scaffold_recs = (
             line.strip().split('\t')
             for line in f
             if line.startswith('>')
         )
 
-        return {
-            scaffold: [extract_coords_and_name(gene_str) for gene_str, _ in scaffold_gene_strs]
-            for scaffold, scaffold_gene_strs in groupby(genes_scaffolds, key=second)
-        }
-
-
-def hmm_to_evalues(mgm_res, hmm_res):
-    """
-    :type mgm_res: dict[str, list[tuple[int, int, str]]]
-    :type hmm_res: dict[str: list[float]]
-    """
-    for scaffold, coords_names in sorted(mgm_res.items(), key=first):
-        if scaffold not in hmm_res:
-            continue
-        hmm_scaffold_res = hmm_res[scaffold]
-
-        evalues_it = [
-            hmm_scaffold_res.get(gene_name[1:], INFINITY)
-            for begin, end, gene_name in coords_names
+        scaffolds = [
+            Scaffold(
+                name=scaffold_name[1:],
+                genes=parse_gene_records(gene_records)
+            )
+            for scaffold_name, gene_records in groupby(genes_scaffold_recs, key=second)
         ]
 
-        yield (scaffold, evalues_it)
+        return ScaffoldSet(scaffolds=scaffolds)
+
